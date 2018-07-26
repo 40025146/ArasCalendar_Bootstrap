@@ -1,0 +1,51 @@
+﻿@model ArasMVC01.Models.WORK_ORDER
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>WORK_ORDER</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        
+        <dt>
+            @Html.DisplayNameFor(model => model.START_DATE)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.START_DATE)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FINISH_DATE)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FINISH_DATE)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ITEM_NUMBER)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ITEM_NUMBER)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.COST)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.COST)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

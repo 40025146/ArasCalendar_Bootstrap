@@ -1,0 +1,403 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+<link href="~/css/calendar.css" rel="stylesheet" />
+<style>
+    #wrap {
+        margin-top: 5px;
+    }
+
+    .plm_work {
+        background-color: palevioletred;
+    }
+</style>
+
+<h2>Google 行事曆</h2>
+
+<!--Add buttons to initiate auth sequence and sign out-->
+<button id="authorize-button" style="display: none;">登入Google</button>
+<button id="signout-button" style="display: none;">登出</button>
+
+@*<pre id="content2"></pre>*@
+
+<div id='wrap'>
+    <ul class="nav nav-tabs" role="tablist">
+        @*<li id="tab_calendar" role="presentation" class="active"><a href="#calendar_page" data-toggle="tab">Calendar</a></li>*@
+        <li id="tab_info" role="presentation"><a href="#info_page" data-toggle="tab">Info</a></li>
+    </ul>
+    <div class="tab-content">
+        @*<div role="tabpanel" class="tab-pane fade in active" id="calendar_page">
+
+        </div>*@
+        <div role="tabpanel" class="tab-pane fade in active" id="info_page">
+            <div>
+                開始日期:<input type="text" class="form-control" id="start_date" />
+            </div>
+            <div>
+                結束日期:<input type="text" class="form-control" id="end_date" />
+            </div>
+            <div>
+                標題:<input type="text" class="form-control" id="edit_title" />
+            </div>
+            <div>
+                描述:<textarea class="form-control" id="edit_content"></textarea>
+            </div>
+            <div>
+                <input type="hidden" id="edit_id" />
+            </div>
+            <div>
+                <input type="button" value="送出至Aras" onclick="NewWork()" />
+            </div>
+        </div>
+    </div>
+
+    <div id='calendarGoogle' style="margin-top:50px;"></div>
+</div>
+
+@section scripts{
+    <script src="~/js/calendar.js"></script>
+    <script type="text/javascript">
+        var calendar_events = [
+        ];
+        // Client ID and API key from the Developer Console
+        var CLIENT_ID = '176786967256-at51tcuc83audflgt9775rsg0ceig9oj.apps.googleusercontent.com';
+        var API_KEY = 'AIzaSyDsJ-5FCyHIJZFA3YMVBdZp-X0aFwAkmF4';
+
+        // Array of API discovery doc URLs for APIs used by the quickstart
+        var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
+
+        // Authorization scopes required by the API; multiple scopes can be
+        // included, separated by spaces.
+        var SCOPES = "https://www.googleapis.com/auth/calendar.readonly";
+
+        var authorizeButton = document.getElementById('authorize-button');
+        var signoutButton = document.getElementById('signout-button');
+
+        /**
+         *  On load, called to load the auth2 library and API client library.
+         */
+        function handleClientLoad() {
+            gapi.load('client:auth2', initClient);
+        }
+
+        /**
+         *  Initializes the API client library and sets up sign-in state
+         *  listeners.
+         */
+        function initClient() {
+            //gapi.client.init({
+            //    apiKey: API_KEY,
+            //    clientId: CLIENT_ID,
+            //    discoveryDocs: DISCOVERY_DOCS,
+            //    scope: SCOPES
+            //}).then(function () {
+            //    // Listen for sign-in state changes.
+            //    gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
+
+            //    // Handle the initial sign-in state.
+            //    updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
+            //    authorizeButton.onclick = handleAuthClick;
+            //    signoutButton.onclick = handleSignoutClick;
+            //});
+        }
+
+        /**
+         *  Called when the signed in status changes, to update the UI
+         *  appropriately. After a sign-in, the API is called.
+         */
+        function updateSigninStatus(isSignedIn) {
+            if (isSignedIn) {
+                authorizeButton.style.display = 'none';
+                signoutButton.style.display = 'block';
+                listUpcomingEvents();
+            } else {
+                authorizeButton.style.display = 'block';
+                signoutButton.style.display = 'none';
+            }
+        }
+
+        /**
+         *  Sign in the user upon button click.
+         */
+        function handleAuthClick(event) {
+            gapi.auth2.getAuthInstance().signIn();
+        }
+
+        /**
+         *  Sign out the user upon button click.
+         */
+        function handleSignoutClick(event) {
+            gapi.auth2.getAuthInstance().signOut();
+        }
+
+        /**
+         * Append a pre element to the body containing the given message
+         * as its text node. Used to display the results of the API call.
+         *
+         * param {string} message Text to be placed in pre element.
+         */
+        function appendPre(message) {
+            //var pre = document.getElementById('content2');
+            //var textContent = document.createTextNode(message + '\n');
+            //pre.appendChild(textContent);
+        }
+
+        /**
+         * Print the summary and start datetime/date of the next ten events in
+         * the authorized user's calendar. If no events are found an
+         * appropriate message is printed.
+         */
+        function listUpcomingEvents() {
+            gapi.client.calendar.events.list({
+                'calendarId': 'primary',
+                'timeMin': (new Date()).toISOString(),
+                'showDeleted': false,
+                'singleEvents': true,
+                'maxResults': 10,
+                'orderBy': 'startTime'
+            }).then(function (response) {
+                var events = response.result.items;
+                appendPre('Upcoming events:');
+
+                if (events.length > 0) {
+                    for (i = 0; i < events.length; i++) {
+                        var event = events[i];
+                        var when = event.start.dateTime;
+                        if (!when) {
+                            when = event.start.date;
+                        }
+                        appendPre(event.summary + ' (' + when + ')');
+
+                        var e = {
+                            'title': events[i].summary,
+                            'start': new Date(events[i].start.date),
+                            'end': new Date(events[i].end.date),
+                            'id': events[i].id,
+                            'content': '',
+                            'allDay': false
+                        }
+                        calendar_events.push(e);
+                    }
+                } else {
+                    appendPre('No upcoming events found.');
+                }
+                ResetWorkEvent();
+            });
+        }
+
+    </script>
+
+
+    <script type="text/javascript">
+        var date = new Date();
+        var d = date.getDate();
+        var m = date.getMonth();
+        var y = date.getFullYear();
+        var calendar;
+        calendar_events = [];
+        var GetMyCalendarEvent = function ()
+        {
+            $.ajax({
+                type:"Post",
+                url: "@Url.Action("GetCalendarTask")",
+                dataType: "json",
+                //contentType:"application",
+                async: false,
+                success: function (res) {
+                    console.log(res);
+
+                    $(res).each(function () {
+                        this.start = new Date(this.start);
+                    });
+                    //console.log(res);
+                    //calendar_events = res;
+                    $(res).each(function () {
+                        calendar_events.push(this);
+                    });
+                    //console.log(JSON.stringify(calendar_events));
+                }
+            });
+        }
+        var GetArasCalendarEvent = function () {
+            $.ajax({
+                type:"Get",
+                url: "@Url.Action("GetArasWork")",
+                dataType: "json",
+                async: false,
+                success: function (res) {
+                    console.log(res);
+
+                    $(res).each(function () {
+                        this.start = new Date(this.start);
+                    });
+                    //console.log(res);
+                    //calendar_events = res;
+                    $(res).each(function () {
+                        calendar_events.push(this);
+                    });
+                }
+            });
+        }
+        var ResetWorkEvent = function () {
+            //calendar_events = [];
+            //GetMyCalendarEvent();
+            GetArasCalendarEvent();
+            console.log(calendar_events);
+            //$("#calendarGoogle").fullCalendar('updateEvents', calendar_events);
+            //$("#calendarGoogle").fullCalendar('rerenderEvents', calendar_events);
+            //$("#calendarGoogle").fullCalendar('updateEvents', calendar_events);
+            $('#external-events div.external-event').each(function () {
+
+                // create an Event Object (http://arshaw.com/fullcalendar/docs/event_data/Event_Object/)
+                // it doesn't need to have a start or end
+                var eventObject = {
+                    title: $.trim($(this).text()) // use the element's text as the event title
+                };
+
+                // store the Event Object in the DOM element so we can get to it later
+                $(this).data('eventObject', eventObject);
+
+                // make the event draggable using jQuery UI
+                $(this).draggable({
+                    zIndex: 999,
+                    revert: true,      // will cause the event to go back to its
+                    revertDuration: 0  //  original position after the drag
+                });
+
+            });
+            calendar = $('#calendarGoogle').fullCalendar({
+                header: {
+                    left: 'title',
+                    center: 'agendaDay,agendaWeek,month',
+                    right: 'prev,next today'
+                },
+                editable: true,
+                firstDay: 1, //  1(Monday) this can be changed to 0(Sunday) for the USA system
+                selectable: true,
+                defaultView: 'month',
+
+                axisFormat: 'h:mm',
+                columnFormat: {
+                    month: 'ddd',    // Mon
+                    week: 'ddd d', // Mon 7
+                    day: 'dddd M/d',  // Monday 9/7
+                    agendaDay: 'dddd d'
+                },
+                titleFormat: {
+                    month: 'MMMM yyyy', // September 2009
+                    week: "MMMM yyyy", // September 2009
+                    day: 'MMMM yyyy'                  // Tuesday, Sep 8, 2009
+                },
+                allDaySlot: false,
+                selectHelper: true,
+                select: function (start, end, allDay) {
+                    //var title = prompt('Event Title:');
+                    //if (title) {
+                    //    calendar.fullCalendar('renderEvent',
+                    //        {
+                    //            title: title,
+                    //            start: start,
+                    //            end: end,
+                    //            allDay: allDay
+                    //        },
+                    //        true // make the event "stick"
+                    //    );
+                    //}
+                    $("#start_date").val(start.getFullYear() + "-" + ('0' + (start.getMonth() + 1)).slice(-2) + "-" + ('0' + start.getDate()).slice(-2));
+                    $("#end_date").val(end.getFullYear() + "-" + ('0' + (end.getMonth() + 1)).slice(-2) + "-" + ('0' + end.getDate()).slice(-2));
+                    $("#edit_title").val("");
+                    $("#edit_content").val("");
+
+                    $('a[href="#info_page"]').tab('show');
+                    calendar.fullCalendar('unselect');
+
+                },
+                eventClick: function (calEvent, jsEvent, view) {
+
+                    //alert('Event: ' + calEvent.title + "\r\n" + calEvent.id );
+                    //alert('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
+                    //alert('View: ' + view.name);
+                    $("#start_date").val(calEvent.start.getFullYear() + "-" + ('0' + (calEvent.start.getMonth() + 1)).slice(-2) + "-" + ('0' + calEvent.start.getDate()).slice(-2));
+                    $("#end_date").val(calEvent.end.getFullYear() + "-" + ('0' + (calEvent.end.getMonth() + 1)).slice(-2) + "-" + ('0' + calEvent.end.getDate()).slice(-2));
+                    $("#edit_title").val(calEvent.title);
+                    $("#edit_content").val(calEvent.content);
+                    $("#edit_id").val(calEvent.id);
+                    $('a[href="#info_page"]').tab('show');
+                    calendar.fullCalendar('unselect');
+                    // change the border color just for fun
+                    $(this).css('border-color', 'red');
+
+                },
+                droppable: true, // this allows things to be dropped onto the calendar !!!
+                drop: function (date, allDay) { // this function is called when something is dropped
+
+                    // retrieve the dropped element's stored Event Object
+                    var originalEventObject = $(this).data('eventObject');
+
+                    // we need to copy it, so that multiple events don't have a reference to the same object
+                    var copiedEventObject = $.extend({}, originalEventObject);
+
+                    // assign it the date that was reported
+                    copiedEventObject.start = date;
+                    copiedEventObject.allDay = allDay;
+
+                    // render the event on the calendar
+                    // the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
+                    $('#calendar').fullCalendar('renderEvent', copiedEventObject, true);
+
+                    // is the "remove after drop" checkbox checked?
+                    if ($('#drop-remove').is(':checked')) {
+                        // if so, remove the element from the "Draggable Events" list
+                        $(this).remove();
+                    }
+
+                },
+                events: calendar_events
+                //events:
+            });
+        }
+        var ArasTool ={
+            'NewWork': function NewWork(data) {
+                $.ajax({
+                    type: "Post",
+                    url: "@Url.Action("NewWork")",
+                    dataType: "json",
+                    async: false,
+                    data: {
+                       'calendar': data
+                    },
+                    success: function (res) {
+                        console.log(res);
+                        if (res.result != undefined) {
+                            alert("完成");
+                            //ResetWorkEvent();
+                        }
+                        if (res.error != undefined) {
+                            alert(res.error);
+                            console.log(res.error_aml);
+                        }
+                    }
+                });
+            }
+        }
+        var NewWork = function () {
+            var data = {
+                'id': $("#edit_id").val(),
+                'start': $("#start_date").val(),
+                'end': $("#end_date").val(),
+                'title': $("#edit_title").val(),
+                'description': $("#edit_content").val()
+            };
+            ArasTool.NewWork(data);
+        }
+
+        $(document).ready(function () {
+            //initClient();
+            //GetMyCalendarEvent();
+            GetArasCalendarEvent();
+            //listUpcomingEvents();
+            ResetWorkEvent();
+        });
+    </script>
+}

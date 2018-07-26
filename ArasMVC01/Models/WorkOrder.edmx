@@ -1,0 +1,145 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="InnovatorSolutionsModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="WORK_ORDER">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="char" MaxLength="32" Nullable="false" />
+          <Property Name="CLASSIFICATION" Type="nvarchar" MaxLength="512" />
+          <Property Name="KEYED_NAME" Type="nvarchar" MaxLength="128" />
+          <Property Name="CREATED_ON" Type="datetime" Nullable="false" />
+          <Property Name="CREATED_BY_ID" Type="char" MaxLength="32" Nullable="false" />
+          <Property Name="OWNED_BY_ID" Type="char" MaxLength="32" />
+          <Property Name="MANAGED_BY_ID" Type="char" MaxLength="32" />
+          <Property Name="MODIFIED_ON" Type="datetime" />
+          <Property Name="MODIFIED_BY_ID" Type="char" MaxLength="32" />
+          <Property Name="CURRENT_STATE" Type="char" MaxLength="32" />
+          <Property Name="STATE" Type="nvarchar" MaxLength="32" />
+          <Property Name="LOCKED_BY_ID" Type="char" MaxLength="32" />
+          <Property Name="IS_CURRENT" Type="char" MaxLength="1" />
+          <Property Name="MAJOR_REV" Type="nvarchar" MaxLength="8" />
+          <Property Name="MINOR_REV" Type="nvarchar" MaxLength="8" />
+          <Property Name="IS_RELEASED" Type="char" MaxLength="1" />
+          <Property Name="NOT_LOCKABLE" Type="char" MaxLength="1" />
+          <Property Name="CSS" Type="nvarchar(max)" />
+          <Property Name="GENERATION" Type="int" />
+          <Property Name="NEW_VERSION" Type="char" MaxLength="1" />
+          <Property Name="CONFIG_ID" Type="char" MaxLength="32" Nullable="false" />
+          <Property Name="PERMISSION_ID" Type="char" MaxLength="32" Nullable="false" />
+          <Property Name="TEAM_ID" Type="char" MaxLength="32" />
+          <Property Name="START_DATE" Type="datetime" />
+          <Property Name="FINISH_DATE" Type="datetime" />
+          <Property Name="ITEM_NUMBER" Type="nvarchar" MaxLength="16" />
+          <Property Name="COST" Type="int" />
+        </EntityType>
+        <EntityContainer Name="InnovatorSolutionsModelStoreContainer">
+          <EntitySet Name="WORK_ORDER" EntityType="Self.WORK_ORDER" Schema="innovator" store:Type="Tables" />
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="InnovatorSolutionsModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="WORK_ORDER">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="String" MaxLength="32" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="CLASSIFICATION" Type="String" MaxLength="512" FixedLength="false" Unicode="true" />
+          <Property Name="KEYED_NAME" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="CREATED_ON" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CREATED_BY_ID" Type="String" MaxLength="32" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="OWNED_BY_ID" Type="String" MaxLength="32" FixedLength="true" Unicode="false" />
+          <Property Name="MANAGED_BY_ID" Type="String" MaxLength="32" FixedLength="true" Unicode="false" />
+          <Property Name="MODIFIED_ON" Type="DateTime" Precision="3" />
+          <Property Name="MODIFIED_BY_ID" Type="String" MaxLength="32" FixedLength="true" Unicode="false" />
+          <Property Name="CURRENT_STATE" Type="String" MaxLength="32" FixedLength="true" Unicode="false" />
+          <Property Name="STATE" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="LOCKED_BY_ID" Type="String" MaxLength="32" FixedLength="true" Unicode="false" />
+          <Property Name="IS_CURRENT" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="MAJOR_REV" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="MINOR_REV" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="IS_RELEASED" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="NOT_LOCKABLE" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="CSS" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="GENERATION" Type="Int32" />
+          <Property Name="NEW_VERSION" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="CONFIG_ID" Type="String" MaxLength="32" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="PERMISSION_ID" Type="String" MaxLength="32" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="TEAM_ID" Type="String" MaxLength="32" FixedLength="true" Unicode="false" />
+          <Property Name="START_DATE" Type="DateTime" Precision="3" />
+          <Property Name="FINISH_DATE" Type="DateTime" Precision="3" />
+          <Property Name="ITEM_NUMBER" Type="String" MaxLength="16" FixedLength="false" Unicode="true" />
+          <Property Name="COST" Type="Int32" />
+        </EntityType>
+        <EntityContainer Name="InnovatorSolutionsEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="WORK_ORDER" EntityType="Self.WORK_ORDER" />
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="InnovatorSolutionsModelStoreContainer" CdmEntityContainer="InnovatorSolutionsEntities">
+          <EntitySetMapping Name="WORK_ORDER">
+            <EntityTypeMapping TypeName="InnovatorSolutionsModel.WORK_ORDER">
+              <MappingFragment StoreEntitySet="WORK_ORDER">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="CLASSIFICATION" ColumnName="CLASSIFICATION" />
+                <ScalarProperty Name="KEYED_NAME" ColumnName="KEYED_NAME" />
+                <ScalarProperty Name="CREATED_ON" ColumnName="CREATED_ON" />
+                <ScalarProperty Name="CREATED_BY_ID" ColumnName="CREATED_BY_ID" />
+                <ScalarProperty Name="OWNED_BY_ID" ColumnName="OWNED_BY_ID" />
+                <ScalarProperty Name="MANAGED_BY_ID" ColumnName="MANAGED_BY_ID" />
+                <ScalarProperty Name="MODIFIED_ON" ColumnName="MODIFIED_ON" />
+                <ScalarProperty Name="MODIFIED_BY_ID" ColumnName="MODIFIED_BY_ID" />
+                <ScalarProperty Name="CURRENT_STATE" ColumnName="CURRENT_STATE" />
+                <ScalarProperty Name="STATE" ColumnName="STATE" />
+                <ScalarProperty Name="LOCKED_BY_ID" ColumnName="LOCKED_BY_ID" />
+                <ScalarProperty Name="IS_CURRENT" ColumnName="IS_CURRENT" />
+                <ScalarProperty Name="MAJOR_REV" ColumnName="MAJOR_REV" />
+                <ScalarProperty Name="MINOR_REV" ColumnName="MINOR_REV" />
+                <ScalarProperty Name="IS_RELEASED" ColumnName="IS_RELEASED" />
+                <ScalarProperty Name="NOT_LOCKABLE" ColumnName="NOT_LOCKABLE" />
+                <ScalarProperty Name="CSS" ColumnName="CSS" />
+                <ScalarProperty Name="GENERATION" ColumnName="GENERATION" />
+                <ScalarProperty Name="NEW_VERSION" ColumnName="NEW_VERSION" />
+                <ScalarProperty Name="CONFIG_ID" ColumnName="CONFIG_ID" />
+                <ScalarProperty Name="PERMISSION_ID" ColumnName="PERMISSION_ID" />
+                <ScalarProperty Name="TEAM_ID" ColumnName="TEAM_ID" />
+                <ScalarProperty Name="START_DATE" ColumnName="START_DATE" />
+                <ScalarProperty Name="FINISH_DATE" ColumnName="FINISH_DATE" />
+                <ScalarProperty Name="ITEM_NUMBER" ColumnName="ITEM_NUMBER" />
+                <ScalarProperty Name="COST" ColumnName="COST" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="無" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
